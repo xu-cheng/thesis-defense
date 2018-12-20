@@ -1,7 +1,7 @@
 # vim: set filetype=perl:
 
 # Build arguments
-$pdflatex = 'pdflatex --shell-escape --synctex=1 %O %S';
+$pdflatex = 'lualatex --shell-escape --synctex=1 %O %S';
 # Always create PDFs
 $pdf_mode = 1;
 # Try 5 times at maximum then give up
