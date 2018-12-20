@@ -68,7 +68,20 @@
   pdfpagemode={FullScreen},
   pdfpagelayout={SinglePage},
 }
+\usepackage{bookmark}
 
 % beamer theme
 \usetheme{metropolis}
 \usepackage{appendixnumberbeamer}
+
+% bibliography
+\usepackage[
+  style=ieee-alphabetic,
+  doi=false,
+  isbn=false,
+  giveninits=true,
+  dashed=false,
+  maxbibnames=10,
+  mincitenames=1,
+  maxcitenames=1,
+]{biblatex}

@@ -1,6 +1,7 @@
 \documentclass[xcolor={dvipsnames},aspectratio=169,10pt]{beamer}
 
 \input{preamble.tex}
+\addbibresource{ref.bib}
 
 \title{Authenticated Query Processing in the Cloud}
 \author{XU Cheng}
@@ -36,5 +37,15 @@
 \end{frame}
 
 \appendix%
+
+\begingroup
+\setbeamertemplate{frametitle continuation}{}
+\begin{frame}[t,allowframebreaks]{\refname}
+  \bookmark[page=\thepage,startatroot]{\refname}
+  \setbeamertemplate{bibliography item}[text]
+  \renewcommand*{\bibfont}{\scriptsize}
+  \printbibliography%
+\end{frame}
+\endgroup
 
 \end{document}
