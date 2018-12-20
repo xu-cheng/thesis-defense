@@ -9,6 +9,12 @@
 
 % better text justifying
 \usepackage{microtype}
+% justify text inside list environment
+% Ref: http://liam0205.me/2017/04/11/justifying-in-beamer-s-lists/
+\usepackage{ragged2e}
+\xpatchcmd{\itemize}{\raggedright}{\justifying}{}{}
+\xpatchcmd{\beamer@enum@}{\raggedright}{\justifying}{}{}
+\xpatchcmd{\@@description}{\raggedright}{\justifying}{}{}
 
 % math related packages
 \usepackage{amsmath}
@@ -66,8 +72,3 @@
 % beamer theme
 \usetheme{metropolis}
 
-% Justify text inside list environment
-% Ref: http://liam0205.me/2017/04/11/justifying-in-beamer-s-lists/
-\xpatchcmd{\itemize}{\raggedright}{\justifying}{}{}
-\xpatchcmd{\beamer@enum@}{\raggedright}{\justifying}{}{}
-\xpatchcmd{\@@description}{\raggedright}{\justifying}{}{}
