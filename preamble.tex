@@ -1,8 +1,73 @@
-\usetheme{metropolis}
+% check for obsoleted LaTeX packages
+\usepackage[l2tabu,orthodox]{nag}
 
+% utility packages
+\usepackage{etoolbox}
+\usepackage{xifthen}
+\usepackage{xpatch}
+\usepackage{calc}
+
+% better text justifying
+\usepackage{microtype}
+
+% math related packages
+\usepackage{amsmath}
+\usepackage{amssymb}
+\let\emptyset\varnothing%
+\usepackage{amsfonts}
+\usepackage{mathrsfs}
+\usepackage{latexsym}
+\usepackage{bm}
+\usepackage{fancynum}
+
+% figure related packages
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{backgrounds,calc,decorations.pathreplacing,fit,matrix,patterns,positioning,shapes,shapes.multipart}
+\usepackage{pgfplots}
+\usepackage[outline]{contour}
+\contourlength{1.8pt}
+\makeatletter
+% Ref: https://tex.stackexchange.com/a/62273
+\newenvironment{customlegend}[1][]{%
+  \begingroup
+  \csname pgfplots@init@cleared@structures\endcsname
+  \pgfplotsset{#1}
+  \def\addlegendimage{\csname pgfplots@addlegendimage\endcsname}
+  \def\addlegendentry{\csname pgfplots@addlegendentry\endcsname}
+}{%
+  \csname pgfplots@createlegend\endcsname
+  \endgroup
+}%
+\makeatother
+
+% table related packages
+\usepackage{array}
+\usepackage{tabu}
+\usepackage{booktabs}
+\usepackage{multirow}
+\newcommand{\tabincell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}
+\usepackage{threeparttable}
+\newcolumntype{C}{>{$}c<{$}}
+\newcolumntype{L}{>{$}l<{$}}
+
+% hyperref setting
 \hypersetup{
+  unicode,
+  bookmarksnumbered=true,
+  bookmarksopen=true,
+  bookmarksopenlevel=3,
   pdfcenterwindow=true,
   pdfstartview={Fit},
   pdfpagemode={FullScreen},
   pdfpagelayout={SinglePage},
 }
+
+% beamer theme
+\usetheme{metropolis}
+
+% Justify text inside list environment
+% Ref: http://liam0205.me/2017/04/11/justifying-in-beamer-s-lists/
+\xpatchcmd{\itemize}{\raggedright}{\justifying}{}{}
+\xpatchcmd{\beamer@enum@}{\raggedright}{\justifying}{}{}
+\xpatchcmd{\@@description}{\raggedright}{\justifying}{}{}
