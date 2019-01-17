@@ -21,6 +21,19 @@
 \section{Introduction}
 
 \begin{frame}{Background}
+  \begin{itemize}[<+->]
+    \item \alert{\emph{Data-as-a-Service} (DaaS)} and \alert{cloud computing} are gaining popularity for big data analytics
+          \begin{center}
+            \input{figs/model.tex}
+          \end{center}
+    \item \textcolor{Red}{Security Threats}: SP cannot be fully trusted $\Rightarrow$ Query result integrity not guaranteed
+    \item \textcolor{Green}{Solution}:
+          \begin{itemize}[<1->]
+            \item DO signs a well-designed \alert{\emph{authenticated data structure} (ADS)}
+            \item SP constructs a cryptographic proof a.k.a.\ \alert{\emph{verifciation object} (VO)}
+            \item Clients verify the correctness of the results based on VO
+          \end{itemize}
+  \end{itemize}
 \end{frame}
 
 \section{Authenticating Aggregate Queries over Set-Valued Data}
