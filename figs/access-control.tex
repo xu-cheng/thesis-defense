@@ -1,0 +1,17 @@
+\begin{tikzpicture}
+  \node[matrix, inner sep=0] (output) {
+    \node[scale=0.9] at (0,0.5) (user1) {\includegraphics{figs/icons/user.eps}};
+    \node[scale=0.9] at (0,-0.5) (user2) {\includegraphics{figs/icons/user.eps}};
+    \node[right=0cm of user1] (user1-info) {$u_1: \{Role_A, Role_B\}$};
+    \node[right=0cm of user2] (user2-info) {$u_2: \{Role_C\}$};
+    \\
+  };
+
+  \coordinate (user-mid) at ($(user1)!.5!(user2)$);
+  \node[left=2cm of user-mid] (input) {\includegraphics[width=0.5cm]{figs/icons/lock.eps}};
+  \node[below=0cm of input] {$\Upsilon = Role_A $};
+  \coordinate (mid) at ($(input)!.4!(user-mid)$);
+  \draw (input.east) -- (mid);
+  \draw[-latex] (mid) |- (user1.west) node[pos=0.75, sloped, scale=1, color=Green] {\ding{52}};
+  \draw[-latex] (mid) |- (user2.west) node[pos=0.75, sloped, scale=1, color=Red] {\ding{55}};
+\end{tikzpicture}

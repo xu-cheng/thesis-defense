@@ -81,6 +81,45 @@
   \end{columns}
 \end{frame}
 
+\begin{frame}{Related Works}
+  \begin{itemize}[<+->]
+    \item However, the prior works have only considered \alert{limited query types}
+    \item They fail to consider:
+      \begin{itemize}[<+- | alert@+>]
+        \item Aggregate queries over set-valued data for data analytics
+        \item Enforcing fine-grained access control
+        \item Query processing in distributed settings
+      \end{itemize}
+  \end{itemize}
+
+  \begin{columns}[b]
+    \begin{column}{0.33\textwidth}
+      \begin{figure}
+        \onslide<3->{%
+          \resizebox{\linewidth}{!}{\input{figs/analytics.tex}}
+          \caption{Analytics Queries}
+        }
+      \end{figure}
+    \end{column}
+    \begin{column}{0.33\textwidth}
+      \begin{figure}
+        \onslide<4->{%
+          \resizebox{\linewidth}{!}{\input{figs/access-control.tex}}
+          \caption{Access Control}
+        }
+      \end{figure}
+    \end{column}
+    \begin{column}{0.33\textwidth}
+      \begin{figure}
+        \onslide<5->{%
+          \resizebox{\linewidth}{!}{\input{figs/distributed.tex}}
+          \caption{Distributed Query Processing}
+        }
+      \end{figure}
+    \end{column}
+  \end{columns}
+\end{frame}
+
 \section{Authenticating Aggregate Queries over Set-Valued Data}
 
 \section{Authenticating Relational Queries with Fine-Grained Access Control}

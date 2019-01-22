@@ -1,0 +1,19 @@
+\begin{tikzpicture}
+  \node[matrix,ampersand replacement=\&] (input) {
+    \node (data) {\includegraphics[width=0.5cm]{./figs/icons/database.eps}};
+    \node[right=0 of data,scale=0.5] (table) {
+      \begin{tabular}{|l|l|}
+        \hline
+        $o_1$ & $\{a, b, c\}$ \\
+        \hline
+        $o_2$ & $\{a, d\}$ \\
+        \hline
+        $\cdots$ & $\cdots$ \\
+        \hline
+      \end{tabular}
+    };
+    \\
+  };
+  \node[right=0.5cm of input] (out) {\includegraphics[width=0.5cm]{./figs/icons/analytics.eps}};
+  \draw[-latex] (input) -- (out);
+\end{tikzpicture}
