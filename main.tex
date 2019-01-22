@@ -23,17 +23,62 @@
 \begin{frame}{Background}
   \begin{itemize}[<+->]
     \item \alert{\emph{Data-as-a-Service} (DaaS)} and \alert{cloud computing} are gaining popularity for big data analytics
-          \begin{center}
-            \input{figs/model.tex}
-          \end{center}
+      \begin{figure}
+        \input{figs/model.tex}
+        \caption{System Model}
+      \end{figure}
     \item \textcolor{Red}{Security Threats}: SP cannot be fully trusted $\Rightarrow$ Query result integrity not guaranteed
     \item \textcolor{Green}{Solution}:
-          \begin{itemize}[<1->]
-            \item DO signs a well-designed \alert{\emph{authenticated data structure} (ADS)}
-            \item SP constructs a cryptographic proof a.k.a.\ \alert{\emph{verifciation object} (VO)}
-            \item Clients verify the correctness of the results based on VO
-          \end{itemize}
+      \begin{itemize}[<1->]
+        \item DO signs a well-designed \alert{\emph{authenticated data structure} (ADS)}
+        \item SP constructs a cryptographic proof a.k.a.\ \alert{\emph{verifciation object} (VO)}
+        \item Clients verify the correctness of the results based on VO
+      \end{itemize}
   \end{itemize}
+\end{frame}
+
+\begin{frame}{Related Works}
+  \begin{columns}
+    \begin{column}{0.8\linewidth}
+      \begin{itemize}[<+->]
+        \item There are two approaches to support authenticated query processing
+        \item \alert{ADS-based Solutions}
+          \begin{itemize}[<1->]
+            \item Designed specifically based on the computation task
+            \item \makebox[.35\linewidth][l]{\textcolor{Green}{Pros}: efficient}
+              \textcolor{Red}{Cons}: only work for the specific queries
+            \item \textcolor{Violet}{Examples}:
+              \parbox[t]{\linewidth}{%
+                \strut%
+                signature chaining~\cite{10.1109/ICDE.2004.1320027}, Merkle hash tree~\cite{10.1007/0-387-34805-0_21}, \\ set accumulator~\cite{10.1145/2660267.2660373}, etc.%
+                \strut%
+              }%
+          \end{itemize}
+        \item \alert{General-Purpose Solutions}
+          \begin{itemize}[<1->]
+            \item Modeling computation task as boolean or arithmetic circuit
+            \item \makebox[.35\linewidth][l]{\textcolor{Green}{Pros}: expressive}
+              \textcolor{Red}{Cons}: high setup/proving cost
+            \item \textcolor{Violet}{Examples}: zkSNARKs~\cite{10.1109/sp.2013.47}, RAM-based VC~\cite{10.1145/2517349.2522733}, etc.
+          \end{itemize}
+        \item We focus on \alert{ADS-based solutions} in this thesis
+      \end{itemize}
+    \end{column}%
+    \begin{column}{0.2\linewidth}
+      \begin{figure}
+        \onslide<2->{%
+          \resizebox{\linewidth}{!}{\input{figs/sig-chain.tex}}
+          \caption{Signature Chaining}
+          \resizebox{\linewidth}{!}{\input{figs/mht.tex}}
+          \caption{Merkle Hash Tree}
+          \onslide<3->{%
+            \resizebox{\linewidth}{!}{\input{figs/zksnarks.tex}}
+            \caption{zkSNARKs}
+          }
+        }
+      \end{figure}%
+    \end{column}
+  \end{columns}
 \end{frame}
 
 \section{Authenticating Aggregate Queries over Set-Valued Data}
@@ -57,7 +102,7 @@
   \bookmark[page=\thepage,startatroot]{\refname}
   \setbeamertemplate{bibliography item}[text]
   \renewcommand*{\bibfont}{\scriptsize}
-  \printbibliography%
+  \printbibliography[heading=none]%
 \end{frame}
 \endgroup
 

@@ -1,0 +1,38 @@
+\begin{tikzpicture}
+  \node[matrix] (circuit) {
+    \node (circuit-fig) {%
+      \begin{tikzpicture}[scale=0.2]
+        \node[circle,draw=black,minimum size=10,inner sep=0] (g1) at (0, 0) {};
+        \node[circle,draw=black,minimum size=10,inner sep=0] (g2) at (-1, 2) {};
+        \node[circle,draw=black,minimum size=10,inner sep=0] (g3) at (1, 2) {};
+        \draw (g1) -- (0, -1.5);
+        \draw (g1) -- (g2);
+        \draw (g1) -- (g3);
+        \draw (g2) -- (-0.25, 4);
+        \draw (g2) -- (-2, 4);
+        \draw (g3) -- (0.25, 4);
+        \draw (g3) -- (2, 4);
+      \end{tikzpicture}
+    };
+    \node[below=0cm of circuit-fig] {Circuit};
+    \\
+  };
+
+  \node[matrix, left=0.2cm of circuit] (input) {
+    \node (db) {\includegraphics[width=0.6cm]{./figs/icons/database.eps}};
+    \node[left=0cm of db] {Data};
+    \node[below=0.6cm of db] (sql) {\includegraphics[width=0.6cm]{./figs/icons/sql.eps}};
+    \node[left=0cm of sql] {Program};
+    \draw[decorate,decoration={brace,amplitude=10pt}]
+    (db.east) -- coordinate[right=10pt] (input-mid) (sql.east);
+    \\
+  };
+  \draw[-latex] (input-mid) -- (circuit);
+
+  \node[matrix,right=0.5cm of circuit] (proof) {
+    \node (cert) {\includegraphics[width=0.7cm]{./figs/icons/cert.eps}};
+    \node[below=0cm of cert] {Proof};
+    \\
+  };
+  \draw[-latex] (circuit) -- (proof);
+\end{tikzpicture}
