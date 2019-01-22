@@ -6,7 +6,7 @@
 \title{Authenticated Query Processing in the Cloud}
 \author{XU Cheng}
 \institute{Supervisor: Prof.~XU Jianliang}
-\date{\today}
+\date{January 31, 2019}
 \titlegraphic{\hfill\resizebox{!}{0.7cm}{\input{figs/group-logo.tex}}}
 
 \begin{document}
@@ -93,7 +93,7 @@
   \end{itemize}
 
   \begin{columns}[b]
-    \begin{column}{0.33\textwidth}
+    \begin{column}{0.33\linewidth}
       \begin{figure}
         \onslide<3->{%
           \resizebox{\linewidth}{!}{\input{figs/analytics.tex}}
@@ -101,7 +101,7 @@
         }
       \end{figure}
     \end{column}
-    \begin{column}{0.33\textwidth}
+    \begin{column}{0.33\linewidth}
       \begin{figure}
         \onslide<4->{%
           \resizebox{\linewidth}{!}{\input{figs/access-control.tex}}
@@ -109,7 +109,7 @@
         }
       \end{figure}
     \end{column}
-    \begin{column}{0.33\textwidth}
+    \begin{column}{0.33\linewidth}
       \begin{figure}
         \onslide<5->{%
           \resizebox{\linewidth}{!}{\input{figs/distributed.tex}}
@@ -121,6 +121,49 @@
 \end{frame}
 
 \section{Authenticating Aggregate Queries over Set-Valued Data}
+
+\begin{frame}[fragile]{Example of Aggregate Queries over Set-Valued Data}
+  \begin{columns}
+    \begin{column}{.5\linewidth}
+      \setbeamercovered{transparent}
+      \begin{table}
+        \resizebox{\linewidth}{!}{%
+          \begin{tabular}{ccl}
+            \toprule
+            \textbf{PID} & \textbf{ZIP} & \multicolumn{1}{c}{\textbf{Mut-Genes}}\\
+            \midrule
+            \onslide<1,2,3>{P1&95014&\alert<2>{A-C130R}, P-I696M} \\
+            \onslide<1,3,4>{P2&20482&H-C282Y, \alert<4>{P-P12A}, \alert<3,4>{R-G1886S}} \\
+            \onslide<1,2,3>{P3&95014&\alert<2>{A-C130R}, U-G71R, W-R611H} \\
+            \onslide<1,3>{P4&01720&A-V2050L, H-C282Y, M-R52C, U-G71R} \\
+            \onslide<1,3,4>{P5&20134&A-C130R, \alert<4>{P-P12A}, \alert<3,4>{R-G1886S}, S-E366K} \\
+            \onslide<1,3>{P6&17868& C-R102G, \alert<3>{R-G1886S}} \\
+            \onslide<1,3>{P7&55410&C-R102G, C-Q1334H, S-E288V} \\
+            \onslide<1,3,4>{P8&20852&C-R102G, \alert<4>{P-P12A}, \alert<3,4>{R-G1886S}, K-T220M} \\
+            \bottomrule
+          \end{tabular}
+        }
+        \caption{Set-Valued Genome Dataset~\cite{pgp}}
+      \end{table}
+    \end{column}%
+    \begin{column}{.5\linewidth}
+      \begin{itemize}
+        \item<2-> \textbf{Q1}: Find the most common gene in the district of Cupertino, CA (ZIP\@: 95014) \\
+          \textcolor{Violet}{\emph{Answer:} \{`A-C130R'\}}
+        \item<3-> \textbf{Q2}: Count the number of participants who carry the gene `R-G1886S' \\
+          \textcolor{Violet}{\emph{Answer:} 4}
+        \item<4-> \textbf{Q3}: Find the most frequent genes with supports $\ge$ 3 in ZIPs 20*** \\
+          \textcolor{Violet}{\emph{Answer:} \{`P-P12A', `R-G1886S'\}}
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Problem Definition}
+\end{frame}
+
+\begin{frame}{Threat Model}
+\end{frame}
 
 \section{Authenticating Relational Queries with Fine-Grained Access Control}
 
