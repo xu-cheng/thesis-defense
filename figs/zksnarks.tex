@@ -1,4 +1,4 @@
-\begin{tikzpicture}
+\begin{tikzpicture}[inner sep=0]
   \node[matrix] (circuit) {
     \node (circuit-fig) {%
       \begin{tikzpicture}[scale=0.2]
@@ -18,18 +18,20 @@
     \\
   };
 
-  \node[matrix, left=0.2cm of circuit] (input) {
-    \node (db) {\includegraphics[width=0.6cm]{./figs/icons/database.eps}};
-    \node[left=0cm of db] {Data};
-    \node[below=0.6cm of db] (sql) {\includegraphics[width=0.6cm]{./figs/icons/sql.eps}};
-    \node[left=0cm of sql] {Program};
+  \node[matrix, left=0.4cm of circuit] (input) {
+    \node (db-icon) {\includegraphics[width=0.6cm]{./figs/icons/database.eps}};
+    \node[below=0cm of db-icon] (db-label) {Data};
+    \node[fit=(db-icon)(db-label)] (db) {};
+    \node[below=0.1cm of db] (sql-icon) {\includegraphics[width=0.6cm]{./figs/icons/sql.eps}};
+    \node[below=0cm of sql-icon] (sql-label) {Program};
+    \node[fit=(sql-icon)(sql-label)] (sql) {};
     \draw[decorate,decoration={brace,amplitude=10pt}]
-    (db.east) -- coordinate[right=10pt] (input-mid) (sql.east);
+    (db.east -| sql.east) -- coordinate[right=10pt] (input-mid) (sql.east);
     \\
   };
   \draw[-latex] (input-mid) -- (circuit);
 
-  \node[matrix,right=0.5cm of circuit] (proof) {
+  \node[matrix,right=0.6cm of circuit] (proof) {
     \node (cert) {\includegraphics[width=0.7cm]{./figs/icons/cert.eps}};
     \node[below=0cm of cert] {Proof};
     \\
