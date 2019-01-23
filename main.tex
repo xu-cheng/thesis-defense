@@ -122,6 +122,8 @@
 
 \section{Authenticating Aggregate Queries over Set-Valued Data}
 
+\subsection{Problem Formulation}
+
 \begin{frame}[fragile]{Example of Aggregate Queries over Set-Valued Data}
   \begin{columns}
     \begin{column}{.5\linewidth}
@@ -161,7 +163,7 @@
 
 \begin{frame}{Problem Definition}
   \begin{itemize}[<+->]
-    \item \textbf{Dataset} $\mathbb{D} = \{o_1, o_2, \dots, o_n\}$
+    \item \textbf{Dataset} $\mathbb{D} = \{o_1, o_2, \dotsc, o_n\}$
       \begin{itemize}[<.->]
         \item $o_i = \langle A_i, X_i \rangle$.
         \item $A_i$ is a set of \textcolor{Green}{non-sensitive} attributes
@@ -181,6 +183,8 @@
   \end{itemize}
 \end{frame}
 
+\subsection{Preliminaries}
+
 \begin{frame}{Preliminaries}
   \begin{definition}<+->[Bilinear-Map (BM) Accumulator]
     Let $g$ be the group generator of a cyclic multiplicative group $\mathbb{G}$ and $s$ be a \textcolor{Red}{private value of DO}. The accumulator maps a multiset $X = \{ x_1, x_2, \dotsc, x_m \}$ to a single value in $\mathbb{G}$:
@@ -189,8 +193,8 @@
     \end{align*}
     Without knowing $s$, one can still compute an $acc(\cdot)$ value by giving $g^s, g^{s^2}, \dotsc$
   \end{definition}
-  \begin{example}<+->
-    $X = \{ 1, 1, 2 \}$, $acc(X) = g^{(1+s)^2(2+s)} = g^{s^3+4 s^2+5 s+2} = g^{s^3} \cdot (g^{s^2})^4 \cdot(g^s)^5 \cdot g^2$
+  \begin{example}<.->
+    $X = \{ 1, 1, 2 \}$, $acc(X) = g^{{(1+s)}^2(2+s)} = g^{s^3+4 s^2+5 s+2} = g^{s^3} \cdot {(g^{s^2})}^4 \cdot {(g^s)}^5 \cdot g^2$
   \end{example}
   \begin{definition}<+->[Randomized BM Accumulator]
     BM accumulator is \alert{deterministic} for \emph{a fixed multiset}. As such, an adversary can tell in high confidence that two multisets are the same. We can randomize BM accumulator as following:
@@ -215,6 +219,8 @@
     \end{itemize}
   \end{definition}
 \end{frame}
+
+\subsection{PA$^2$ Authentication Framework}
 
 \begin{frame}[fragile]{PA$^2$ Authentication Framework Overview}
   \begin{figure}
@@ -252,6 +258,137 @@
     \item PA$^2$ on Candidate Object Selection
   \end{itemize}
 \end{frame}
+
+\subsubsection{PA$^2$ Protocols on Multiset Operations}
+
+\begin{frame}{PA$^2$ Protocols on Multiset Operations --- Subset}
+  \begin{block}{$sub(X_1, X_2)$: returns $acc$ value of $X_1 - X_2$ iff $X_2 \subseteq X_1$}
+    \begin{itemize}
+      \item DO prepares $acc(X_1)$, $acc(X_2)$
+      \item SP computes ${acc(X_1 - X_2)}^* = g^{r_{X_1}/r_{X_2} \prod_{x \in (X_1 - X_2)} (x+s)}$
+      \item Client verifies $e(acc(X_2), {acc(X_1 - X_2)}^*) \stackrel{?}{=} e(acc(X_1), g)$
+    \end{itemize}
+  \end{block}
+  \begin{example}
+    \begin{itemize}
+      \item $X_1 = \{ 1, 1, 2 \}$, $X_2 = \{ 1, 2 \}$
+      \item $acc(X_1) = g^{r_{X_1}{(1+s)}^2(2+s)}$, $acc(X_2) = g^{r_{X_2}(1+s)(2+s)}$, ${acc(X_1 - X_2)}^* = g^{r_{X_1}/r_{X_2}(1+s)}$
+      \item \(
+        \begin{aligned}[t]
+          e(acc(X_2), {acc(X_1 - X_2)}^*) &= e(g^{r_{X_2}(1+s)(2+s)},g^{r_{X_1}/r_{X_2}(1+s)}) = {e(g, g)}^{r_{X_1}{(1+s)}^2(2+s)} \\
+          e(acc(X_1), g) &=  e(g^{r_{X_1}{(1+s)}^2(2+s)}, g) = {e(g, g)}^{r_{X_1}{(1+s)}^2(2+s)}
+        \end{aligned}
+        \)
+    \end{itemize}
+  \end{example}
+\end{frame}
+
+\begin{frame}{PA$^2$ Protocols on Multiset Operations --- Sum}
+  \begin{block}{$sum(\{X_1, \dotsc, X_n\})$: returns $acc$ value of $S = \uplus_{i=1}^n X_i$}
+    \begin{itemize}
+      \item DO prepares $acc(X_1), \dotsc, acc(X_n)$
+      \item SP computes ${acc(\uplus_{j = 1}^i X_j)}^*$, for $i \in [2, n]$
+      \item Client verifies
+        \begin{adjustbox}{valign=t}
+          \(
+          \begin{aligned}
+            \left \{
+              \begin{array}{l}
+                e(acc(X_1), acc(X_2)) \stackrel{?}{=} e({acc(X_1 \uplus X_2)}^*, g)\\
+                e({acc(X_1\uplus X_2)}^*, acc(X_3)) \stackrel{?}{=} e({acc(X_1\uplus X_2\uplus X_3)}^*, g) \\
+                \vdots\\
+                e({acc(\uplus_{i=1}^{n-1} X_i)}^*, acc(X_n)) \stackrel{?}{=} e({acc(S)}^*, g)
+              \end{array}
+            \right.
+          \end{aligned}
+          \)
+        \end{adjustbox}
+    \end{itemize}
+  \end{block}
+  \begin{example}
+    \begin{itemize}
+      \item $X_1 = \{ 1 \}$, $X_2 = \{ 1 \}$, $X_3 = \{ 2 \}$
+      \item SP returns ${acc(X_1 \uplus X_2)}^* = acc(\{1, 1\})$ and ${acc(S)}^* = {acc(X_1 \uplus X_2 \uplus X_3)}^* = acc(\{1, 1, 2\})$
+    \end{itemize}
+  \end{example}
+\end{frame}
+
+\begin{frame}{PA$^2$ Protocols on Multiset Operations --- Empty}
+  \begin{block}{$empty(\{X_1, \dotsc, X_n\})$: returns whether $\cap_{i=1}^n X_i = \emptyset$}
+    \begin{itemize}
+      \item DO prepares $acc(X_1), \dotsc, acc(X_n)$
+      \item Based on \alert{extended Euclidean algorithm}
+        \begin{align*}
+          \textstyle%
+          \cap \{ X_i \} = \emptyset \Rightarrow \exists Q_i \text{ s.t. } \sum_{i=1}^n Q_i \cdot P(X_i) = 1
+        \end{align*}
+      \item SP computes $F_i^* = g^{Q_i}$, for $i \in [1, n]$
+      \item Client verifies $\prod_{i=1}^n e(acc(X_i), F_i^*) \stackrel{?}{=} e(g, g)$
+    \end{itemize}
+  \end{block}
+  \begin{example}
+    \begin{itemize}
+      \item $X_1 = \{ 1 \}$, $X_2 = \{ 2 \}$
+      \item SP returns $F_1^* = g^{-1/r_{X_1}}$, $F_2^* = g^{1/r_{X_2}}$
+      \item \(
+        \begin{aligned}[t]
+          e(acc(X_1), F_1^*)e(acc(X_2), F_2^*) &= e(g^{r_{X_1}(1+s)}, g^{-1/r_{X_1}})e(g^{r_{X_2}(2+s)}, g^{1/r_{X_2}}) \\
+                                               &= {e(g,g)}^{-1-s}{e(g,g)}^{2+s} = {e(g,g)}^{-1-s+2+s} = e(g,g)
+        \end{aligned}
+        \)
+    \end{itemize}
+  \end{example}
+\end{frame}
+
+\begin{frame}{PA$^2$ Protocols on Multiset Operations --- Union}
+  \begin{block}{$union(\{X_1, \dotsc, X_2\})$: returns $acc$ value of $U = \cup_{i=1}^n X_i$}
+    \begin{itemize}
+      \item Denote $\widehat{X}_i$ as the \alert{set version} of a multiset $X_i$
+      \item Client verifies two conditions:
+        \begin{enumerate}
+          \item \alert{Deflation checking}: no object is missing
+            \begin{align*}
+              \widehat{X}_1 \subseteq U \wedge \widehat{X}_2 \subseteq U \wedge \cdots \widehat{X}_n \subseteq U
+            \end{align*}
+          \item \alert{Inflation checking}: no non-result object is added
+            \begin{align*}
+              (U - \widehat{X}_1) \cap (U - \widehat{X}_2) \cap \cdots (U - \widehat{X}_n) = \emptyset
+            \end{align*}
+        \end{enumerate}
+    \end{itemize}
+  \end{block}
+  \begin{example}
+    \begin{itemize}
+      \item $X_1 = \{ 1 \}$, $X_2 = \{ 2 \}$, $U = \{ 1, 2 \}$
+      \item \alert{Deflation checking}: $\{1\} \subseteq \{1,2\}, \{2\} \subseteq \{1,2\}$ \\
+        \alert{Inflation checking}: $\{2\} \cap \{1\} = \emptyset$
+    \end{itemize}
+  \end{example}
+\end{frame}
+
+\begin{frame}{PA$^2$ Protocols on Multiset Operations --- Times}
+  \begin{block}{$times(X, t)$: returns $acc$ value of $t \cdot X$}
+    \begin{itemize}
+      \item Let $d = \lfloor \log_2(t) \rfloor$ and $t = {(b_0b_1\cdots b_d)}_2$, the \alert{binary form} of $t$.
+      \item $times(X, t) = sum(\{b_0 \cdot X, \dotsc, b_i \cdot 2^i \cdot X, \dotsc, b_d \cdot 2^d \cdot X\})$
+      \item SP computes ${acc(2\cdot X)}^*, \dotsc, {acc({2^d} \cdot X)}^*, {acc(t \cdot X)}^*$.
+      \item Client verifies:
+        \begin{itemize}
+          \item $e(2^{i-1} \cdot X, 2^{i-1} \cdot X) = e(2^{i} \cdot X, g)$, for $i \in [1, d]$
+          \item Apply $sum(\{b_0 \cdot X, \dotsc, b_i \cdot 2^i \cdot X, \dotsc, b_d \cdot 2^d \cdot X\})$.
+        \end{itemize}
+    \end{itemize}
+  \end{block}
+  \begin{example}
+    \begin{itemize}
+      \item When $t = 5$, SP computes $acc(2\cdot X), acc(4\cdot X)$
+      \item $acc(5 \cdot X) = sum(\{X, 4\cdot X\})$
+    \end{itemize}
+  \end{example}
+\end{frame}
+
+\subsubsection{PA$^2$ Algorithms on Aggregate Queries}
+\subsubsection{PA$^2$ on Candidate Object Selection}
 
 \section{Authenticating Relational Queries with Fine-Grained Access Control}
 
