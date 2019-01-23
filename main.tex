@@ -201,6 +201,58 @@
   \end{definition}
 \end{frame}
 
+\begin{frame}{Preliminaries}
+  \begin{definition}[Cryptographic Hash Function]
+    A cryptographic hash function $H(\cdot)$ accepts an arbitrary-length string as its input and returns a fixed-length bit string such that it is computationally infeasible to find $m_1 \neq m_2$ and $H(m_1) = H(m_2)$.
+  \end{definition}
+  \begin{definition}[Bilinear Pairing]
+    Let $\mathbb{G}, \mathbb{G}_T$ be two cyclic multiplicative groups of order $p$.
+    A pairing is a map $e: \mathbb{G} \times \mathbb{G} \to \mathbb{G}_T$, which satisfies:
+    \begin{itemize}
+      \item \textbf{Bilinearity}: $e(u^a,v^b) = {e(u,v)}^{ab}$, $\forall u, v \in \mathbb{G}$
+      \item \textbf{Non-degeneracy}: $e(g,g) \ne 1$
+      \item \textbf{Computability}: Given $u, v \in \mathbb{G}$, it is easy to compute $e(u, v)$
+    \end{itemize}
+  \end{definition}
+\end{frame}
+
+\begin{frame}[fragile]{PA$^2$ Authentication Framework Overview}
+  \begin{figure}
+    \onslide<+->{%
+      \resizebox{.8\linewidth}{!}{%
+        \begin{tikzpicture}
+          \node[anchor=south west,inner sep=0] (A) at (0,0)
+            {\includegraphics[width=\linewidth]{figs/aggregate-queries/overview.pdf}};
+          \coordinate (multiset1) at (8.6,2.2);
+          \coordinate (multiset2) at (11.9,3.45);
+          \coordinate (aggregate1) at (9,0.1);
+          \coordinate (aggregate2) at (11.7,1.55);
+          \coordinate (select1) at (4.8,0.1);
+          \coordinate (select2) at (7.57,3.45);
+          \draw<2>[Red,ultra thick] (multiset1) rectangle (multiset2);
+          \fill<2>[draw=none,fill=black,fill opacity=0.3,even odd rule]
+            (A.south west) rectangle (A.north east)
+            (multiset1) rectangle (multiset2);
+          \draw<3>[Red,ultra thick] (aggregate1) rectangle (aggregate2);
+          \fill<3>[draw=none,fill=black,fill opacity=0.3,even odd rule]
+            (A.south west) rectangle (A.north east)
+            (aggregate1) rectangle (aggregate2);
+          \draw<4>[Red,ultra thick] (select1) rectangle (select2);
+          \fill<4>[draw=none,fill=black,fill opacity=0.3,even odd rule]
+            (A.south west) rectangle (A.north east)
+            (select1) rectangle (select2);
+        \end{tikzpicture}
+      }
+      \caption{Privacy-Preserving Authentication Framework for Aggregate Queries}
+    }
+  \end{figure}
+  \begin{itemize}[<+- | alert@+>]
+    \item PA$^2$ Protocols on Multiset Operations
+    \item PA$^2$ Algorithms on Aggregate Queries
+    \item PA$^2$ on Candidate Object Selection
+  \end{itemize}
+\end{frame}
+
 \section{Authenticating Relational Queries with Fine-Grained Access Control}
 
 \section{Authenticating {kNN} Queries in Distributed Settings}
