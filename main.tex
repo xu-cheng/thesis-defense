@@ -160,9 +160,45 @@
 \end{frame}
 
 \begin{frame}{Problem Definition}
+  \begin{itemize}[<+->]
+    \item \textbf{Dataset} $\mathbb{D} = \{o_1, o_2, \dots, o_n\}$
+      \begin{itemize}[<.->]
+        \item $o_i = \langle A_i, X_i \rangle$.
+        \item $A_i$ is a set of \textcolor{Green}{non-sensitive} attributes
+        \item $X_i$ is a \textcolor{Red}{sensitive} multiset of \emph{features}
+      \end{itemize}
+    \item \textbf{Aggregate Query} $Q = (q, \{x_i\}, [\alpha, \beta])$
+      \begin{itemize}[<.->]
+        \item $q$ is an aggregate operator, i.e., \emph{max/min}, \emph{count}, \emph{sum}, \emph{top-$k$}, and \emph{frequent feature query (FFQ)}
+        \item $\{x_i\}$ is the queried feature specified for \emph{count} and \emph{sum}
+        \item $[\alpha, \beta]$ specifies the selection range over the \textcolor{Green}{non-sensitive} attributes
+      \end{itemize}
+    \item \textbf{Threat Model}
+      \begin{itemize}[<.->]
+        \item \alert{Integrity}: SP should prove the \emph{soundness} and \emph{completeness} of the results
+        \item \alert{Confidentiality}: Clients should not infer any \emph{sensitive source data}
+      \end{itemize}
+  \end{itemize}
 \end{frame}
 
-\begin{frame}{Threat Model}
+\begin{frame}{Preliminaries}
+  \begin{definition}<+->[Bilinear-Map (BM) Accumulator]
+    Let $g$ be the group generator of a cyclic multiplicative group $\mathbb{G}$ and $s$ be a \textcolor{Red}{private value of DO}. The accumulator maps a multiset $X = \{ x_1, x_2, \dotsc, x_m \}$ to a single value in $\mathbb{G}$:
+    \begin{align*}
+      acc(X) = g^{P(X)} = g^{\prod_{x_i \in X}(x_i + s)}
+    \end{align*}
+    Without knowing $s$, one can still compute an $acc(\cdot)$ value by giving $g^s, g^{s^2}, \dotsc$
+  \end{definition}
+  \begin{example}<+->
+    $X = \{ 1, 1, 2 \}$, $acc(X) = g^{(1+s)^2(2+s)} = g^{s^3+4 s^2+5 s+2} = g^{s^3} \cdot (g^{s^2})^4 \cdot(g^s)^5 \cdot g^2$
+  \end{example}
+  \begin{definition}<+->[Randomized BM Accumulator]
+    BM accumulator is \alert{deterministic} for \emph{a fixed multiset}. As such, an adversary can tell in high confidence that two multisets are the same. We can randomize BM accumulator as following:
+    \begin{align*}
+      acc(X) = g^{P(X) \cdot r_X} = g^{r_X\prod_{x_i \in X}(x_i + s)}
+    \end{align*}
+    $r_X$ is a random value \textcolor{Red}{hidden from Clients} but \textcolor{Green}{disclosed to SP}
+  \end{definition}
 \end{frame}
 
 \section{Authenticating Relational Queries with Fine-Grained Access Control}
