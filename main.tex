@@ -371,11 +371,11 @@
     \begin{itemize}
       \item Let $d = \lfloor \log_2(t) \rfloor$ and $t = {(b_0b_1\cdots b_d)}_2$, the \alert{binary form} of $t$.
       \item $times(X, t) = sum(\{b_0 \cdot X, \dotsc, b_i \cdot 2^i \cdot X, \dotsc, b_d \cdot 2^d \cdot X\})$
-      \item SP computes ${acc(2\cdot X)}^*, \dotsc, {acc({2^d} \cdot X)}^*, {acc(t \cdot X)}^*$.
+      \item SP computes ${acc(2\cdot X)}^*, \dotsc, {acc({2^d} \cdot X)}^*, {acc(t \cdot X)}^*$
       \item Client verifies:
         \begin{itemize}
-          \item $e(2^{i-1} \cdot X, 2^{i-1} \cdot X) = e(2^{i} \cdot X, g)$, for $i \in [1, d]$
-          \item Apply $sum(\{b_0 \cdot X, \dotsc, b_i \cdot 2^i \cdot X, \dotsc, b_d \cdot 2^d \cdot X\})$.
+          \item $e({acc(2^{i-1} \cdot X)}^*, {acc(2^{i-1} \cdot X)}^*) = e({acc(2^{i} \cdot X)}^*, g)$, for $i \in [1, d]$
+          \item Apply $sum(\{b_0 \cdot X, \dotsc, b_i \cdot 2^i \cdot X, \dotsc, b_d \cdot 2^d \cdot X\})$
         \end{itemize}
     \end{itemize}
   \end{block}
@@ -388,6 +388,13 @@
 \end{frame}
 
 \subsubsection{PA$^2$ Algorithms on Aggregate Queries}
+
+\begin{frame}{PA$^2$ Algorithms on Aggregate Queries --- Sum Query}
+\end{frame}
+
+\begin{frame}{PA$^2$ Algorithms on Aggregate Queries --- Max Query}
+\end{frame}
+
 \subsubsection{PA$^2$ on Candidate Object Selection}
 
 \section{Authenticating Relational Queries with Fine-Grained Access Control}
