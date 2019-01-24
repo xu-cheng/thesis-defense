@@ -149,7 +149,7 @@
       \end{table}
     \end{column}%
     \begin{column}{.5\linewidth}
-      \begin{itemize}[<+(1)->]
+      \begin{itemize}[<+(1)->]% chktex 36
         \item \textbf{Q1}: Find the most common gene in the district of Cupertino, CA (ZIP\@: 95014) \\
           \textcolor{Violet}{\emph{Answer:} \{`A-C130R'\}}
         \item \textbf{Q2}: Count the number of participants who carry the gene `R-G1886S' \\
@@ -201,7 +201,7 @@
     \begin{align*}
       acc(X) = g^{P(X) \cdot r_X} = g^{r_X\prod_{x_i \in X}(x_i + s)}
     \end{align*}
-    $r_X$ is a random value \textcolor{Red}{hidden from Clients} but \textcolor{Green}{disclosed to SP}
+    $r_X$ is a random value \textcolor{Red}{hidden from Clients} but \textcolor{Green}{disclosed to SP}.
   \end{definition}
 \end{frame}
 
@@ -343,14 +343,14 @@
 \begin{frame}{PA$^2$ Protocols on Multiset Operations --- Union}
   \begin{block}{$union(\{X_1, \dotsc, X_2\})$: returns $acc$ value of $U = \cup_{i=1}^n X_i$}
     \begin{itemize}
-      \item Denote $\widehat{X}_i$ as the \alert{set version} of a multiset $X_i$
+      \item Denote $\widehat{X}_i$ as the \alert{set version} of a multiset $X_i$.
       \item Client verifies two conditions:
         \begin{enumerate}
-          \item \alert{Deflation checking}: no object is missing
+          \item \alert{Deflation checking} (no object is missing):
             \begin{align*}
               \widehat{X}_1 \subseteq U \wedge \widehat{X}_2 \subseteq U \wedge \cdots \widehat{X}_n \subseteq U
             \end{align*}
-          \item \alert{Inflation checking}: no non-result object is added
+          \item \alert{Inflation checking} (no non-result object is added):
             \begin{align*}
               (U - \widehat{X}_1) \cap (U - \widehat{X}_2) \cap \cdots (U - \widehat{X}_n) = \emptyset
             \end{align*}
@@ -390,9 +390,86 @@
 \subsubsection{PA$^2$ Algorithms on Aggregate Queries}
 
 \begin{frame}{PA$^2$ Algorithms on Aggregate Queries --- Sum Query}
+  \begin{block}{Sum Query $sum(x_q)$: returns feature $x_q$'s multiplicity sum $\eta_q$}
+    \begin{itemize}
+      \item Denote $X_1, \dotsc, X_n$ as input multisets and $R = \{ (x_q, \eta_q) \}$ as the result.
+      \item Execute $sum(\{X_1, \dotsc, X_n\})$ to get verified $acc(S)$, where $S = \uplus \{X_i\}$
+      \item Client verifies two conditions:
+        \begin{enumerate}
+          \item \alert{Inflation checking} (no non-result object is added):
+            \begin{align*}
+              R \subseteq S
+            \end{align*}
+          \item \alert{Deflation checking} (no object is missing):
+            \begin{align*}
+              (S - R) \cap R = \emptyset
+            \end{align*}
+        \end{enumerate}
+    \end{itemize}
+  \end{block}
+  \begin{example}
+    \begin{itemize}
+      \item $S = \{(a,6), (b, 1), (c, 5), (d, 3), (e, 2)\}$, $x_q = a$. The result is $R = \{(a, 6)\}$.
+      \item \alert{Inflation checking}: $\{(a, 6)\} \subseteq \{(a,6)$, $(b, 1)$, $(c, 5)$, $(d, 3)$, $(e, 2)\}$ \\
+        \alert{Deflation checking}: $\{(b, 1), (c,5), (d, 3), (e, 2)\} \cap \{(a, 6)\} = \emptyset$
+    \end{itemize}
+  \end{example}
 \end{frame}
 
 \begin{frame}{PA$^2$ Algorithms on Aggregate Queries --- Max Query}
+  \begin{block}{Max Query: returns the feature with the highest (i.e., top-1) multiplicity}
+    \begin{itemize}
+      \item Denote $X_1, \dotsc, X_n$ as input multisets and $R = \{ (x, \tau) \}$ as the result.
+      \item Execute $sum(\{X_1, \dotsc, X_n\})$ to get verified $acc(S)$, where $S = \uplus \{X_i\}$
+      \item Execute $union(\{X_1, \dotsc, X_n\})$ to get verified $acc(U)$, where $U = \cup \{\widehat{X}_i\}$
+      \item Client verifies three conditions:
+        \begin{enumerate}
+          \item \alert{Inflation checking}: $R \subseteq S$
+          \item \alert{Deflation checking}: $(S - R) \cap R = \emptyset$
+          \item \alert{Completeness checking} (all other features have multiplicity less than $\tau$):
+            \begin{align*}
+              (S - R) \subseteq \tau \cdot (U -\widehat{R})
+            \end{align*}
+        \end{enumerate}
+    \end{itemize}
+  \end{block}
+  \begin{example}
+    \begin{itemize}
+      \item $S = \{(a,6), (b, 1), (c, 5), (d, 3), (e, 2)\}$, $U = \{(a, 1), (b, 1), (c, 1), (d, 1), (e, 1)\}$.
+      \item The result is $R = \{(a, 6)\}$.
+      \item \alert{Completeness checking}: $\{(b, 1), (c, 5), (d, 3), (e, 2)\} \subseteq $ $\{(b,$ $6), (c, 6), (d, 6), (e, 6)\}$
+    \end{itemize}
+  \end{example}
+\end{frame}
+
+\begin{frame}{PA$^2$ Algorithms on Aggregate Queries --- Other Queries}
+  \begin{itemize}
+    \item \textbf{Count Query}
+      \begin{itemize}
+        \item Returns the count of candidate objects that have the queried feature.
+        \item Equivalent to \alert{Sum Query} with multiplicity of each feature enforced as 1.
+      \end{itemize}
+    \item \textbf{Average Query}
+      \begin{itemize}
+        \item Returns the average multiplicity of queried feature in the candidate objects.
+        \item Equivalent to \alert{Sum Query} divided by \alert{Count Query}.
+      \end{itemize}
+    \item \textbf{Min Query}
+      \begin{itemize}
+        \item Returns the feature with the lowest (i.e. bottom-$1$) multiplicity.
+        \item Similar to \alert{Max Query}, except $(S - R) \supseteq {\tau} \cdot (U - \widehat{R})$.
+      \end{itemize}
+    \item \textbf{Frequent Features Query}
+      \begin{itemize}
+        \item Returns the feature with multiplicity larger than threshold $\tau$.
+        \item Sub module of \alert{Max Query}.
+      \end{itemize}
+    \item \textbf{Top-$k$ Query}
+      \begin{itemize}
+        \item Returns the features with the top-$k$ multiplicity.
+        \item Similar to \alert{Max Query}, except $\tau$ is the $k$-th feature's multiplicity.
+      \end{itemize}
+  \end{itemize}
 \end{frame}
 
 \subsubsection{PA$^2$ on Candidate Object Selection}
