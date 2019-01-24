@@ -92,7 +92,7 @@
       \end{itemize}
   \end{itemize}
 
-  \begin{columns}[b]
+  \begin{columns}[b,onlytextwidth]
     \begin{column}{0.33\linewidth}
       \begin{figure}
         \onslide<3->{%
@@ -125,7 +125,7 @@
 \subsection{Problem Formulation}
 
 \begin{frame}[fragile]{Example of Aggregate Queries over Set-Valued Data}
-  \begin{columns}
+  \begin{columns}[onlytextwidth]
     \begin{column}{.5\linewidth}
       \setbeamercovered{transparent}
       \begin{table}
@@ -473,6 +473,41 @@
 \end{frame}
 
 \subsubsection{PA$^2$ on Candidate Object Selection}
+
+\begin{frame}{PA$^2$ on Candidate Object Selection}
+  \begin{figure}
+    \begin{subfigure}[b]{.4\linewidth}
+      \centering
+      \includegraphics[width=\linewidth]{figs/aggregate-queries/pyramid.eps}
+      \caption{Structure}
+    \end{subfigure}\quad%
+    \begin{subfigure}[b]{.4\linewidth}
+      \centering
+      \includegraphics[width=\linewidth]{figs/aggregate-queries/grid_tree.eps}
+      \caption{Index}
+    \end{subfigure}
+    \caption{Merkle Grid Tree (MG-tree)}
+  \end{figure}
+  \begin{itemize}
+    \item \alert{Leaf Node}: $dig_i = H(H(acc(X_{c_1})) | \dotsb | H(acc(X_{c_C})) )$
+    \item \alert{Non-Leaf Node}: $dig_i = H(gb_{c_1} | dig_{c_1} | \dotsb | gb_{c_C} | dig_{c_C} )$
+    \item Apply \alert{Bucket Indistinguishability} to \emph{preserve privacy}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{PA$^2$ on Candidate Object Selection (Optimized)}
+  \begin{figure}
+    \includegraphics[width=.4\linewidth]{figs/aggregate-queries/grid_tree_opt.eps}
+    \caption{Optimized MG-tree}
+  \end{figure}
+  \metroset{block=transparent}
+  \begin{alertblock}{Optimized Digest for Non-Leaf Node}
+    \begin{align*}
+      dig_i = H(gb_{c_1} | H(acc(S_{c_1})| acc(U_{c_1})) | dig_{c_1} | \dotsb
+      |gb_{c_C} | H(acc(S_{c_C})|acc(U_{c_C})) | dig_{c_C})
+    \end{align*}
+  \end{alertblock}
+\end{frame}
 
 \subsection{Performance Evaluation}
 
