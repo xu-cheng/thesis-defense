@@ -495,21 +495,59 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}{PA$^2$ on Candidate Object Selection (Optimized)}
-  \begin{figure}
-    \includegraphics[width=.4\linewidth]{figs/aggregate-queries/grid_tree_opt.eps}
-    \caption{Optimized MG-tree}
-  \end{figure}
-  \metroset{block=transparent}
-  \begin{alertblock}{Optimized Digest for Non-Leaf Node}
-    \begin{align*}
-      dig_i = H(gb_{c_1} | H(acc(S_{c_1})| acc(U_{c_1})) | dig_{c_1} | \dotsb
-      |gb_{c_C} | H(acc(S_{c_C})|acc(U_{c_C})) | dig_{c_C})
-    \end{align*}
-  \end{alertblock}
+\subsection{Performance Evaluation}
+
+\begin{frame}{Performance Evaluation}
+  \begin{table}
+    \footnotesize
+    \begin{tabular}{cccc}
+      \toprule
+      Dataset & \tabincell{c}{Dataset\\ Size (MB)} & {Setup Time (s)} & \tabincell{c}{MG-tree Index\\Size (MB)} \\
+      \midrule
+      PGP  & 0.08 & 9.7 & 0.42 \\
+      FoodMarket & 0.9 & 136 & 7.1 \\
+      TPC-H & 13 & 1,365 & 116 \\
+      \bottomrule
+    \end{tabular}
+    \caption{DO Setup Overhead}
+  \end{table}
+
+  \begin{itemize}
+    \item Datasets:
+      \begin{description}
+        \item[PGP] $600$ participants, totally $395$ unique mutation genes (avg. $35$ per person)
+        \item[FoodMarket] $\fnum{164558}$ shopping transaction records from $\fnum{8842}$ users and $\fnum{1560}$ products
+        \item[TPC-H] $\fnum{1020116}$ transaction records from $\fnum{255000}$ orders and $\fnum{1700}$ suppliers
+      \end{description}
+  \end{itemize}
 \end{frame}
 
-\subsection{Performance Evaluation}
+\begin{frame}{Performance Evaluation}
+  \savebox{\figbox}{%
+    \includegraphics[height=.3\textheight]{exp-figs/aggregate-queries/pgp_vo.eps}%
+  }
+  \begin{figure}
+    \setlength{\tabcolsep}{0pt}
+    \renewcommand{\arraystretch}{0}
+    \begin{tabular}{c@{\quad}lll}
+      PGP &
+      \includegraphics[valign=m,totalheight=\ht\figbox]{exp-figs/aggregate-queries/pgp_sp.eps} &
+      \includegraphics[valign=m,totalheight=\ht\figbox]{exp-figs/aggregate-queries/pgp_client.eps} &
+      \includegraphics[valign=m,totalheight=\ht\figbox]{exp-figs/aggregate-queries/pgp_vo.eps}
+      \\
+      FoodMarket &
+      \includegraphics[valign=m,totalheight=\ht\figbox]{exp-figs/aggregate-queries/foodmarket_sp.eps} &
+      \includegraphics[valign=m,totalheight=\ht\figbox]{exp-figs/aggregate-queries/foodmarket_client.eps} &
+      \includegraphics[valign=m,totalheight=\ht\figbox]{exp-figs/aggregate-queries/foodmarket_vo.eps}
+      \\
+      TPC-H &
+      \includegraphics[valign=m,totalheight=\ht\figbox]{exp-figs/aggregate-queries/tpch_sp.eps} &
+      \includegraphics[valign=m,totalheight=\ht\figbox]{exp-figs/aggregate-queries/tpch_client.eps} &
+      \includegraphics[valign=m,totalheight=\ht\figbox]{exp-figs/aggregate-queries/tpch_vo.eps}
+    \end{tabular}
+    \caption{Query Performance vs. Selectivity}
+  \end{figure}
+\end{frame}
 
 \section{Authenticating Relational Queries with Fine-Grained Access Control}
 
@@ -541,6 +579,21 @@
 \end{frame}
 
 \appendix%
+
+\begin{frame}{PA$^2$ on Candidate Object Selection (Optimized)}
+  \begin{figure}
+    \includegraphics[width=.4\linewidth]{figs/aggregate-queries/grid_tree_opt.eps}
+    \caption{Optimized MG-tree}
+  \end{figure}
+  \metroset{block=transparent}
+  \begin{alertblock}{Optimized Digest for Non-Leaf Node}
+    \begin{align*}
+      dig_i = H(gb_{c_1} | H(acc(S_{c_1})| acc(U_{c_1})) | dig_{c_1} | \dotsb
+      |gb_{c_C} | H(acc(S_{c_C})|acc(U_{c_C})) | dig_{c_C})
+    \end{align*}
+  \end{alertblock}
+\end{frame}
+
 
 \begingroup
 \setbeamertemplate{frametitle continuation}{}
