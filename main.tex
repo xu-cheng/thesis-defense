@@ -747,9 +747,36 @@
 \section{Conclusions}
 
 \begin{frame}{Contributions}
+  \begin{itemize}
+    \item We have tackled three query authentication problems
+      \begin{itemize}
+        \item Authentication of aggregate queries over set-valued data
+        \item Authentication of relational queries with fine-grained access control
+        \item Authentication of kNN queries in distributed settings
+      \end{itemize}
+    \item We proposed efficient algorithms and ADS to enable DO outsourcing the data while maintaining data integrity
+    \item Security analysis and performance evaluation show that our solutions are robust and efficient
+  \end{itemize}
 \end{frame}
 
 \begin{frame}{Future Directions}
+  \begin{itemize}[<+->]
+    \item \textbf{Accelerating Authenticated Query Processing}
+      \begin{itemize}[<1->]
+        \item Existing techniques still incur dramatic overhead on the computation efficiency
+        \item Utilize parallelism computation such as GPGPU and distributed computation
+      \end{itemize}
+    \item \textbf{Supporting More Complex Query Types}
+      \begin{itemize}[<1->]
+        \item Supporting more complex query types helps to a broader adoption of query authentication
+        \item Utilize general VC to support more query types while using ADS-based technique to accelerate its subtask
+      \end{itemize}
+    \item \textbf{Integrity-Assured Searchable Blockchain}
+      \begin{itemize}[<1->]
+        \item Blockchain offers a new solution to realize trustworthy storage and computation
+        \item But it is costly to become a full node or execute computation using smart contract
+      \end{itemize}
+  \end{itemize}
 \end{frame}
 
 \begin{frame}[standout]
