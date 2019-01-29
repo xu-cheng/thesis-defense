@@ -1,0 +1,46 @@
+\begin{tikzpicture}[remember picture]
+  \node [scale=1] (user) {\includegraphics{figs/icons/user.eps}};
+  \node [scale=0.6,right=2cm of user](sp){\includegraphics{./figs/icons/server.eps}};
+  \onslide<2->{
+    \node [matrix, right=2cm of sp] (cases) {
+      \onslide<2->{ \node at (0, 1) (case1) {CASE 1: Access Granted $\Upsilon(\mathcal{A}) = 1$}; }
+      \onslide<3->{ \node at (0, 0) (case2) {CASE 2: Access Denied $\Upsilon(\mathcal{A}) = 0$}; }
+      \onslide<4->{ \node at (0, -1) (case3) {CASE 3: \subnode{case3-inner}{No Record \includegraphics[height=2ex]{./figs/icons/warning.eps}}}; }
+      \\
+    };
+  }
+
+  \onslide<4->{
+    \node[draw=Red, rectangle callout,
+    callout relative pointer={(-1cm, 0)}, right=1cm of case3](warning)
+    {\textcolor{Red}{Leak information!}};
+  }
+
+  \onslide<5->{
+    \node[below=0.3cm of case3-inner.south west, anchor=west]
+    {Access Denied $\Upsilon'(\mathcal{A}) = 0$};
+
+    \draw[Red, line width=1pt] ($(case3-inner.west) - (0.1cm, 0)$) -- ($(warning.east) + (0.1cm, 0)$);
+  }
+
+  \draw[-latex] (user.east) -- (sp.west) node [above, midway, color=Red] {$Q: \langle o_q, \mathcal{A} \rangle$};
+
+  \onslide<3->{
+    \draw[-latex, dashed] (sp.east) -- (case2.west)
+    node [midway, scale=1.5, color=Red] (case2-res) {\ding{55}};
+  }
+
+  \onslide<2->{
+    \draw[-latex] (sp.north) |- (case1.west);
+    \node[scale=1.5, color=Green] at (case2-res |- case1.west) {\ding{51}};
+  }
+
+  \onslide<4->{
+    \draw[-latex, dashed] (sp.south) |- (case3.west);
+    \node[scale=1.5, color=Red] at (case2-res |- case3.west) {\ding{55}};
+  }
+
+  \onslide<2->{ \node [below=.5cm of cases.south](cases-label){\textbf{Outcomes}}; }
+  \node at (user |- cases-label) {\textbf{User}};
+  \node at (sp |- cases-label) {\textbf{Service Provider}};
+\end{tikzpicture}

@@ -1,0 +1,41 @@
+\begin{tikzpicture}[remember picture]
+  \node[matrix] (output) {
+    \node[scale=0.6] at (0, -1) (cert1) {\includegraphics{figs/icons/cert.eps}};
+    \node[below=0cm of cert1, align=center]{
+      $\Upsilon' = {Role}_C \lor {Role}_\emptyset$ \\
+      $\sigma' = \textsf{ABS.Sign}({sk}_\mathcal{A}, m, {Role}_C \lor {Role}_\emptyset)$
+    };
+    \node[scale=0.6] at (0, 1) (cert2) {\includegraphics{figs/icons/cert.eps}};
+    \node[below=0cm of cert2, align=center]{
+      $\Upsilon' = {Role}_A \lor {Role}_B \lor {Role}_\emptyset$ \\
+      $\sigma' = \textsf{ABS.Sign}({sk}_\mathcal{A}, m, {Role}_A \lor {Role}_B \lor {Role}_\emptyset)$
+    };
+
+    \node[scale=0.9, right=4cm of cert1] (user1) {\includegraphics{figs/icons/user.eps}};
+    \node[right=0cm of user1] (u1) {$u_1$};
+    \node[below=0cm of user1, align=center] {
+    $\Upsilon(\{{Role}_A, {Role}_B\})= 1$ \\ $\Upsilon'(\{{Role}_A, {Role}_B\}) = 0$};
+    \node[scale=0.9, right=4cm of cert2] (user2) {\includegraphics{figs/icons/user.eps}};
+    \node[right=0cm of user2]  (u2) {$u_2$: \subnode{u2-inner}{\textcolor{Red}{Access Denied}}};
+    \node[below=0cm of user2, align=center] {
+    $\Upsilon(\{{Role}_C\})= 0$ \\ $\Upsilon'(\{{Role}_C\}) = 0$};
+    \\
+  };
+
+  \coordinate (cert-mid) at ($(cert1)!.5!(cert2)$);
+
+  \node[scale=0.6, left=6cm of cert-mid] (input) {\includegraphics{figs/icons/cert.eps}};
+  \node[below=0cm of input, align=center]{
+    $\Upsilon = {Role}_A \land {Role}_B$ \\
+    $\sigma = \textsf{ABS.Sign}({sk}_\mathcal{A}, m, {Role}_A \land {Role}_B)$
+  };
+
+  \coordinate (mid) at ($(input)!.45!(cert-mid)$);
+  \draw (input.east) -- (mid);
+  \draw[-latex] (mid) |- (cert1.west) node[pos=0.75, sloped] {X};
+  \draw[-latex] (mid) |- (cert2.west) node[pos=0.75, sloped, scale=2, color=Green] {\ding{51}};
+
+  \node[draw=Green, rectangle callout,
+  callout absolute pointer={(u2-inner.south)}, below=0.1cm of u2-inner.south, xshift=0.3cm]
+  {\textcolor{Green}{No policy leak!}};
+\end{tikzpicture}

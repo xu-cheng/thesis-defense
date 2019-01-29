@@ -553,9 +553,213 @@
 
 \subsection{Problem Formulation}
 
+\begin{frame}{Problem Model}
+  \begin{figure}
+    \centering
+    \resizebox{.75\linewidth}{!}{\input{figs/access-control/model.tex}}
+    \caption{Query Authentication with Access Control}
+  \end{figure}
+
+  \begin{itemize}[<+->]
+    \item \textbf{Problem}
+      \begin{itemize}[<1->]
+        \item Enforcing \alert{fine-grained access control} to enable big data sharing
+        \item Support \alert{equality query}, \alert{range query}, and \alert{join query}
+      \end{itemize}
+    \item \textbf{Threat Model}
+      \begin{itemize}[<1->]
+        \item \alert{Integrity}: SP should prove the \emph{soundess} and \emph{completeness} of the results
+        \item \alert{Zero-Knowledge Confidentiality}: VO should leak no information beyond query results
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
 \subsection{Solutions}
 
+\begin{frame}{Equality Query}
+  \begin{figure}
+    \resizebox{.9\linewidth}{!}{\input{figs/access-control/handle-non-existent.tex}}
+    \caption{Equality Query}
+  \end{figure}
+  \begin{itemize}
+    \item<1-> User submits a query key $o_q$ and a role set $\mathcal{A}$
+    \item<4-> \myst<5>{\alert{Non-existent record will leak information}}
+    \item<5-> Treat non-existent records as \alert{inaccessible by anyone} i.e.\ $\Upsilon' = {Role}_{\emptyset}$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{ABS with Predicate Relaxation}
+  \begin{itemize}
+    \item<+-> \textbf{Attribute Based Signature (ABS)} \\
+      \small{It signs a message with a monotone boolean function predicate that is satisfied by the attributes obtained from the authority}
+      \begin{figure}
+        \resizebox{.85\linewidth}{!}{\input{figs/access-control/abs-basic.tex}}
+      \end{figure}
+    \item<+-> \textbf{Predicate Relaxation} \\
+      \small{Derive a \alert{weaker} ABS signature without knowing secret key}
+      \begin{figure}
+        \resizebox{.85\linewidth}{!}{\input{figs/access-control/abs-relax.tex}}
+      \end{figure}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Authenticated Data Structures}
+  \setbeamerfont{block title example}{size=\small}
+  \setbeamerfont{block body example}{size=\small}
+  \begin{itemize}
+    \item<+-> \emph{Access-Policy-Preserving} (APP) signature
+      \begin{itemize}
+        \item Signed by DO and used as \alert{ADS}
+        \item It captures three parts of information: \alert{query attribute $o_i$}, \alert{data content $v_i$}, and \alert{access policy $\Upsilon_i$}
+      \end{itemize}
+      \begin{example}
+        \begin{align*}
+         & \text{Record}_2 \gets \langle o_2, v_2, \Upsilon_2 = {Role}_A \land {Role}_B \rangle                  \\
+         & \sigma_2 \gets \textsf{ABS.Sign}({sk}_{\textrm{DO}}, hash(o_2) | hash(v_2) , {Role}_A \land {Role}_B)
+        \end{align*}
+      \end{example}
+    \item<+-> \emph{Access-Policy-Stripped} (APS) signature
+      \begin{itemize}
+        \item Replace $\Upsilon_i$ to \alert{$\hat{\Upsilon}_{\mathcal{A}} = a_1 \lor a_2 \lor \dots \lor a_n, a_i \in \mathbb{A}\backslash\mathcal{A}$}
+        \item Be used to prove inaccessibility in \alert{zero-knowledge}
+      \end{itemize}
+      \begin{example}
+        \begin{align*}
+         & \mathbb{A} = \{ {Role}_A, {Role}_B, {Role}_C, {Role}_\emptyset \},
+         \hat{\Upsilon}_{\{{Role}_C\}} = {Role}_A \lor {Role}_B \lor {Role}_\emptyset
+         \\
+         & \hat{\sigma}_2 \gets \textsf{ABS.Sign}({sk}_{\textrm{DO}}, hash(o_2) | hash(v_2) , {Role}_A \lor {Role}_B \lor {Role}_\emptyset)
+        \end{align*}
+      \end{example}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Query Processing}
+  \begin{figure}
+    \footnotesize
+    \resizebox{.8\linewidth}{!}{\input{figs/access-control/equality-query.tex}}
+    \caption{Equality Query Authentication}
+  \end{figure}
+  \begin{itemize}
+    \item<1-> DO generates ADS and sends to the SP
+    \item<2-> $u_1$ \alert{can access the data}, \onslide<3->{APP signature is the VO}
+    \item<4-> $u_2$ \alert{cannot access the data},
+      \onslide<5->{SP generates an \textcolor{Red}{APS signature} as VO}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Range Query Authentication}
+  \begin{figure}
+    \begin{subfigure}[b]{.5\linewidth}
+      \centering
+      \resizebox{\linewidth}{!}{\input{figs/access-control/access-tree.tex}}
+      \caption{Structure}
+    \end{subfigure}~%
+    \begin{subfigure}[b]{.5\linewidth}
+      \centering
+      \resizebox{\linewidth}{!}{\input{figs/access-control/access-tree-index.tex}}
+      \caption{Index}
+    \end{subfigure}
+    \caption{Access-Policy-Preserving Grid-Tree (AP$^2$G-Tree)}
+  \end{figure}
+
+  \begin{itemize}
+    \item \alert{Non-Leaf Node} $p_i = p_{c_1}  \lor  p_{c_2}  \lor  \dots  \lor  p_{c_C}$, $sig_i = \textsf{ABS.Sign}({sk}_{\textrm{DO}}, gb_i , p_i)$
+    \item \alert{Leaf Node} Identical to those of underlying record
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Join Query Authentication}
+  \begin{figure}
+    \centering
+    \resizebox{.65\linewidth}{!}{\input{figs/access-control/join.tex}}
+    \caption{Join Query Authentication}
+  \end{figure}
+
+  \begin{itemize}
+    \item Use \alert{APP signature} to prove soundness
+    \item Use \alert{APS signature} to prove completeness
+  \end{itemize}
+\end{frame}
+
 \subsection{Performance Evaluation}
+
+\begin{frame}{Performance Evaluation}
+  \begin{table}
+    \footnotesize
+    \centering
+    \begin{tabular}{cccc}
+      \toprule
+      \multirow{2}{*}{\tabincell{c}{Database\\Scale}} &
+      \multicolumn{2}{c}{DO CPU Time} &
+      \multirow{2}{*}{\tabincell{c}{Index Size (Tree Structure~+~Signatures) \\(GB)}} \\
+      \cmidrule(lr){2-3}
+                                      &
+      Sign APPs (h) & Build Index (h) &
+      \\
+      \midrule
+      0.1  & 0.63 & 0.74 & 2.47 (0.49 + 1.98) \\
+      0.3  & 0.77 & 0.95 & 2.93 (0.56 + 2.37) \\
+      1    & 0.86 & 1.00 & 3.14 (0.58 + 2.56) \\
+      3    & 0.87 & 1.01 & 3.16  (0.59 + 2.57) \\
+      \bottomrule
+    \end{tabular}
+    \caption{DO Setup Overhead}\label{tab:access-control:do-setup}
+  \end{table}
+  \begin{itemize}
+    \item Dataset:
+      \begin{itemize}
+        \item TPC-H dataset: \\
+          0.1 ($\fnum{600000}$ records), \emph{0.3 ($\fnum{1800000}$ records)}, 1 ($\fnum{6000000}$ records), and 3 ($\fnum{18000000}$ records)
+        \item $10$ distinct policies ($10$ global roles, max policy length is $6$)
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Performance Evaluation}
+  \savebox{\figbox}{%
+    \includegraphics[height=.35\textheight]{exp-figs/access-control/range_sp.eps}%
+  }
+  \begin{figure}
+    \centering
+    \begin{subfigure}{.33\linewidth}
+      \centering
+      \includegraphics[height=\ht\figbox]{exp-figs/access-control/range_sp.eps}
+      \caption{SP CPU Time}
+    \end{subfigure}~%
+    \begin{subfigure}{.33\linewidth}
+      \centering
+      \includegraphics[height=\ht\figbox]{exp-figs/access-control/range_user.eps}
+      \caption{Client CPU Time}
+    \end{subfigure}~%
+    \begin{subfigure}{.33\linewidth}
+      \centering
+      \includegraphics[height=\ht\figbox]{exp-figs/access-control/range_vo.eps}
+      \caption{VO Size}
+    \end{subfigure}
+    \caption{Range Query Performance vs. Range}
+  \end{figure}
+  \vspace{-3ex}
+  \begin{figure}
+    \centering
+    \begin{subfigure}{.33\linewidth}
+      \centering
+      \includegraphics[height=\ht\figbox]{exp-figs/access-control/join_sp.eps}
+      \caption{SP CPU Time}
+    \end{subfigure}~%
+    \begin{subfigure}{.33\linewidth}
+      \centering
+      \includegraphics[height=\ht\figbox]{exp-figs/access-control/join_user.eps}
+      \caption{Client CPU Time}
+    \end{subfigure}~%
+    \begin{subfigure}{.33\linewidth}
+      \centering
+      \includegraphics[height=\ht\figbox]{exp-figs/access-control/join_vo.eps}
+      \caption{VO Size}
+    \end{subfigure}
+    \caption{Join Query Performance vs. Range}
+  \end{figure}
+\end{frame}
 
 \section{Authenticating {kNN} Queries in Distributed Settings}
 
@@ -594,6 +798,29 @@
   \end{alertblock}
 \end{frame}
 
+\begin{frame}{Optimizations of Authenticating Queries with Fine-Grained Access Control}
+  \begin{itemize}[<+->]
+    \item \alert{General Optimizations}:
+      \begin{itemize}[<1->]
+        \item Hierarchical Role Assignment
+        \item Parallelism
+      \end{itemize}
+    \item \alert{Relaxing Zero-Knowledge Requirement}:
+      \begin{figure}
+        \begin{subfigure}[b]{.5\linewidth}
+          \centering
+          \resizebox{\linewidth}{!}{\input{figs/access-control/access-kd-tree.tex}}
+          \caption{Structure}
+        \end{subfigure}~%
+        \begin{subfigure}[b]{.5\linewidth}
+          \centering
+          \resizebox{\linewidth}{!}{\input{figs/access-control/access-kd-tree-index.tex}}
+          \caption{Index}
+        \end{subfigure}
+        \caption{Access-Policy-Preserving $k$-d-Tree (AP$^2k$d-Tree)}
+      \end{figure}
+  \end{itemize}
+\end{frame}
 
 \begingroup
 \setbeamertemplate{frametitle continuation}{}
