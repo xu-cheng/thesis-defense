@@ -807,6 +807,56 @@
 \subsection{Solutions}
 
 \begin{frame}{Local kNN Authentication}
+  \vspace{-2ex}
+  \begin{figure}
+    \centering
+    \begin{subfigure}[b]{.35\linewidth}
+      \centering
+      \begin{tikzpicture}
+        \node[anchor=south west,inner sep=0] (A) at (0,0)
+          {\includegraphics[width=.7\linewidth]{figs/knn/local-mrtree-data.pdf}};
+        \coordinate (N12-1) at (0.4, 0.4);
+        \coordinate (N12-2) at (3.1, 3);
+        \coordinate (N34-1) at (0.4, 1.7);
+        \coordinate (N34-2) at (2.15, 3);
+        \coordinate (abc-1) at (0.4, 1.7);
+        \coordinate (abc-2) at (0.95, 2.3);
+        \draw<3>[Red,ultra thick] (N12-1) rectangle (N12-2);
+        \draw<4>[Red,ultra thick] (N34-1) rectangle (N34-2);
+        \draw<5>[Red,ultra thick] (abc-1) rectangle (abc-2);
+      \end{tikzpicture}
+      \caption{Data}
+    \end{subfigure}~%
+    \begin{subfigure}[b]{.65\linewidth}
+      \centering
+      \begin{tikzpicture}
+        \node[anchor=south west,inner sep=0] (A) at (0,0)
+          {\includegraphics[width=.7\linewidth]{figs/knn/local-mrtree-tree.pdf}};
+        \coordinate (N12-1) at (2.3, 1.7);
+        \coordinate (N12-2) at (4.1, 2.1);
+        \coordinate (N34-1) at (0.6, 1.2);
+        \coordinate (N34-2) at (2.35, 1.6);
+        \coordinate (abc-1) at (0.1, 0.8);
+        \coordinate (abc-2) at (1.1, 1.1);
+        \draw<3>[Red,ultra thick] (N12-1) rectangle (N12-2);
+        \draw<4>[Red,ultra thick] (N34-1) rectangle (N34-2);
+        \draw<5>[Red,ultra thick] (abc-1) rectangle (abc-2);
+      \end{tikzpicture}
+      \caption{Index}
+    \end{subfigure}
+    \caption{Local Authenticated {kNN} Processing}
+  \end{figure}
+  \vspace{-2ex}
+  \begin{itemize}[<+->]
+    \item DO constructs \alert{Merkle R-tree}
+    \item SP executes a best first traversal using \alert{Priority Queue}
+      \begin{itemize}
+        \item PQ: enqueue $N_1$, $N_2$
+        \item PQ: dequeue $N_1$ and enqueue $N_3$, $N_4$
+        \item PQ: dequeue $N_3$ and enqueue $a$, $b$, $c$
+        \item VO: $[[[a, b, c], [N_4, H(N_4)]] ,[N_2, H(N_2)]]$
+      \end{itemize}
+  \end{itemize}
 \end{frame}
 
 \subsection{Performance Evaluation}
