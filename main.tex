@@ -740,6 +740,40 @@
 
 \subsection{Problem Formulation}
 
+\begin{frame}{Background}
+  \begin{itemize}[<+->]
+    \item \textbf{kNN Queries}
+      \begin{itemize}[<1->]
+        \item Return $k$ nearest neighbor of the target point
+        \item Widely used in spatial data analysis
+        \item \textcolor{Violet}{Examples}: $\langle Q, k=3\rangle \Rightarrow \{ P_1, P_2, P_3 \}$
+      \end{itemize}
+    \item Existing authenticated kNN query processing are confined to a centralized environment
+    \item But in reality, big data demands distributed service provider
+  \end{itemize}
+
+  \begin{columns}[b,onlytextwidth]
+    \begin{column}{0.4\linewidth}
+      \begin{figure}
+        \scalebox{0.65}{\input{figs/knn/knn.tex}}
+        \caption{Example of kNN Queries}
+      \end{figure}
+    \end{column}
+    \begin{column}{0.6\linewidth}
+      \begin{figure}
+        \onslide<3->{%
+          \includegraphics[totalheight=1.5cm,valign=m]{figs/knn/spatial_hadoop.png}\quad%
+          \includegraphics[totalheight=1cm,valign=m]{figs/knn/geospark.png}
+          \caption{Distributed Spatial Query Engines}
+        }
+      \end{figure}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Problem Formulation}
+\end{frame}
+
 \subsection{Solutions}
 
 \subsection{Performance Evaluation}

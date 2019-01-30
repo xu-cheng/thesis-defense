@@ -1,0 +1,29 @@
+\begin{tikzpicture}
+  \node[fill=black!30,draw=black,circle,minimum width=3pt,inner sep=0pt] (q) at (0, 0) {};
+  \node[above left=0.5pt of q, color=Red] {$Q$};
+
+  \node[fill=black,draw=black,circle,minimum width=3pt,inner sep=0pt] (p1) at (-0.325, -0.2) {};
+  \node[below left=0.5pt of p1] {$P_1$};
+
+  \node[fill=black,draw=black,circle,minimum width=3pt,inner sep=0pt] (p2) at (0.4, 0.5) {};
+  \node[above left=0.5pt of p2] {$P_2$};
+
+  \node[fill=black,draw=black,circle,minimum width=3pt,inner sep=0pt] (p3) at (1, -1) {};
+  \node[above left=0.5pt of p3] {$P_3$};
+
+  \node[draw=black,circle,minimum width=3pt,inner sep=0pt] (p4) at (1.5, 0.8) {};
+  \node[below right=0.5pt of p4] {$P_4$};
+
+  \node[draw=black,circle,minimum width=3pt,inner sep=0pt] (p5) at (-1.5, -1.5) {};
+  \node[above=0.5pt of p5] {$P_5$};
+
+  \node[draw=black,circle,minimum width=3pt,inner sep=0pt] (p6) at (-1.6, 0.8) {};
+  \node[below=0.5pt of p6] {$P_6$};
+
+  \node[draw=black,circle,minimum width=3pt,inner sep=0pt] (p7) at (1.6, -1.7) {};
+  \node[above=0.5pt of p7] {$P_7$};
+
+  \begin{pgfonlayer}{background}
+    \draw[black,thick,fill=black!20] (0, 0) circle (1.414);
+  \end{pgfonlayer}
+\end{tikzpicture}
