@@ -186,7 +186,7 @@
 \subsection{Preliminaries}
 
 \begin{frame}{Preliminaries}
-  \begin{definition}<+->[Bilinear-Map (BM) Accumulator]
+  \begin{definition}<+->[Bilinear-Map (BM) Accumulator~\cite{10.1007/978-3-540-30574-3_19}]
     Let $g$ be the group generator of a cyclic multiplicative group $\mathbb{G}$ and $s$ be a \textcolor{Red}{private value of DO}. The accumulator maps a multiset $X = \{ x_1, x_2, \dotsc, x_m \}$ to a single value in $\mathbb{G}$:
     \begin{align*}
       acc(X) = g^{P(X)} = g^{\prod_{x_i \in X}(x_i + s)}
@@ -590,7 +590,7 @@
 
 \begin{frame}{ABS with Predicate Relaxation}
   \begin{itemize}
-    \item<+-> \textbf{Attribute Based Signature (ABS)} \\
+    \item<+-> \textbf{Attribute Based Signature (ABS)}~\cite{10.1007/978-3-642-19074-2_24} \\
       \small{It signs a message with a monotone boolean function predicate that is satisfied by the attributes obtained from the authority}
       \begin{figure}
         \resizebox{.85\linewidth}{!}{\input{figs/access-control/abs-basic.tex}}
@@ -806,7 +806,7 @@
 
 \subsection{Solutions}
 
-\begin{frame}{Local kNN Authentication}
+\begin{frame}{Local kNN Authentication~\cite{10.1007/s00778-008-0113-2}}
   \vspace{-2ex}
   \begin{figure}
     \centering
@@ -859,7 +859,155 @@
   \end{itemize}
 \end{frame}
 
+\begin{frame}{Distributed kNN Authentication}
+  \vspace{-2ex}
+  \begin{figure}
+    \centering
+    \begin{subfigure}[b]{.35\linewidth}
+      \centering
+      \includegraphics[width=.7\linewidth]{figs/knn/distributed-mrtree-data.pdf}
+      \caption{Data}
+    \end{subfigure}~%
+    \begin{subfigure}[b]{.65\linewidth}
+      \centering
+      \includegraphics[width=.7\linewidth]{figs/knn/distributed-mrtree-tree.pdf}
+      \caption{Index}
+    \end{subfigure}
+    \caption{Distributed MR-tree}
+  \end{figure}
+  \vspace{-2ex}
+  \begin{itemize}[<+->]
+    \item Partition the space into the Non-overlapped splits
+    \item \textbf{Structure of Distributed MR-tree}
+      \begin{itemize}[<1->]
+        \item \alert{Local indexes} (stored by \emph{slaves}): several MR-trees built by the local partitions
+        \item \alert{Global index} (stored by \emph{master}): contains the information of each MR-trees
+      \end{itemize}
+    \item DO signs the root of global index
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Query Processing}
+  \begin{figure}
+    \includegraphics[width=.6\linewidth]{figs/knn/framework.pdf}
+    \caption{Framework of Distributed Authenticated kNN Query}
+  \end{figure}
+  \vspace{-2ex}
+  \begin{enumerate}[<+->]
+    \item Master searches global index to find \alert{home index}
+    \item HSlave draws a minimum circle \alert{\emph{rcircle}} to cover partial kNN results
+    \item If \emph{rcircle} overlaps other partitions, send to corresponding CSlaves
+    \item CSlaves execute \alert{range queries} to find all objects covered by \emph{rcircle}
+    \item Reducer assembles final result and VO
+    \item Client verifies results by reconstructing root of global index
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Query Processing}
+  \vspace{-2ex}
+  \begin{figure}
+    \centering
+    \begin{subfigure}[b]{.33\linewidth}
+      \centering
+      \includegraphics[width=.6\linewidth]{figs/knn/case1.pdf}
+      \caption{Case 1}
+    \end{subfigure}~%
+    \begin{subfigure}[b]{.33\linewidth}
+      \centering
+      \includegraphics[width=.6\linewidth]{figs/knn/case2.pdf}
+      \caption{Case 2}
+    \end{subfigure}~%
+    \begin{subfigure}[b]{.313\linewidth}
+      \centering
+      \includegraphics[width=.6\linewidth]{figs/knn/specialcase.pdf}
+      \caption{Special Case}
+    \end{subfigure}
+    \caption{Three Cases of {kNN} Processing}
+  \end{figure}
+  \vspace{-2ex}
+  \small
+  \begin{description}[<+->]
+    \item[Case 1]
+      \begin{itemize}[<1->]
+        \item \emph{rcircle} has no intersection with other local tree's MBR
+        \item No range queries are executed by CSlaves
+      \end{itemize}
+    \item[Case 2]
+      \begin{itemize}[<1->]
+        \item \emph{rcircle} has intersection with other local tree's MBR
+        \item The corresponding CSlaves execute range queries \alert{concurrently}
+      \end{itemize}
+    \item[Special Case]
+      \begin{itemize}[<1->]
+        \item \emph{rcircle} contains less than $k$ objects (when data is skewed)
+        \item Enlarge \emph{rcircle} exponentially and run range queries
+        \item Use \alert{\emph{Sort-Tile-Recursive} (STR)}~\cite{10.1109/ICDE.1997.582015} partition to avoid data skewness
+      \end{itemize}
+  \end{description}
+\end{frame}
+
 \subsection{Performance Evaluation}
+
+\begin{frame}{Performance Evaluation}
+  \begin{columns}
+    \begin{column}{0.5\linewidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=0.8\linewidth]{exp-figs/knn/indexconstructtime.eps}
+        \caption{DO's Construction Time}
+      \end{figure}
+    \end{column}
+    \begin{column}{0.5\linewidth}
+      \begin{table}
+        \centering
+        \resizebox{\linewidth}{!}{%
+          \begin{tabular}{cccccc}
+            \toprule
+            Cardinality (Million) & 1.28 & 3.84  & 6.4  & 8.96  & 11.52\\
+            \midrule
+            MR-tree (MB)              & 69.8 & 209.4 & 349 & 488.6 & 628.2\\
+            R-tree (MB)               & 69.4 & 208.2 & 347 & 485.8  & 624.6\\
+            \bottomrule
+        \end{tabular}}
+        \caption{The Size of Index with Different Cardinalities}
+      \end{table}
+    \end{column}
+  \end{columns}
+
+  \begin{itemize}
+    \item Dataset: New York Map from OpenStreetMap (11.56 million data points)
+    \item Queries: randomly select $\fnum{1000}$ data points
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Performance Evaluation}
+  \begin{figure}
+    \centering
+    \begin{subfigure}[t]{.33\linewidth}
+      \centering
+      \includegraphics[width=\linewidth]{exp-figs/knn/querycost.eps}
+      \caption{Query Cost}
+    \end{subfigure}~%
+    \begin{subfigure}[t]{.33\linewidth}
+      \centering
+      \includegraphics[width=\linewidth]{exp-figs/knn/vosize.eps}
+      \caption{VO Size}
+    \end{subfigure}~%
+    \begin{subfigure}[t]{.33\linewidth}
+      \centering
+      \includegraphics[width=\linewidth]{exp-figs/knn/verify.eps}
+      \caption{Verification Cost}
+    \end{subfigure}
+    \caption{Query Authentication Performance}
+  \end{figure}
+
+  \small
+  \begin{description}
+    \item[Basic algorithm] Range queries are executed \alert{in parallel}
+    \item[Optimized algorithm] Range queries are executed \alert{sequentially}
+    \item[Hybird algorithm] Use \alert{one range query} to reduce the \emph{rcircle}, then execute range queries \alert{in parallel}
+  \end{description}
+\end{frame}
 
 \section{Conclusions}
 
@@ -975,9 +1123,9 @@
 \end{frame}
 
 \begin{frame}{Optimizations of Authenticating Queries with Fine-Grained Access Control}
-  \begin{itemize}[<+->]
+  \begin{itemize}
     \item \alert{General Optimizations}:
-      \begin{itemize}[<1->]
+      \begin{itemize}
         \item Hierarchical Role Assignment
         \item Parallelism
       \end{itemize}
@@ -995,6 +1143,35 @@
         \end{subfigure}
         \caption{Access-Policy-Preserving $k$-d-Tree (AP$^2k$d-Tree)}
       \end{figure}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Sort Tile Recursive~\cite{10.1109/ICDE.1997.582015}}
+  \begin{figure}
+    \includegraphics[height=0.4\textheight]{figs/knn/str.png}
+    \caption{Example of Sort Tile Recursive}
+  \end{figure}
+
+  \begin{itemize}
+    \item Ensure each partition has the same number of objects
+    \item Two rounds:
+      \begin{itemize}
+        \item partition space vertically to multiple slices
+        \item partition each slice horizontally
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Optimizations of Distributed kNN Authentication}
+  \begin{figure}
+    \includegraphics[height=0.4\textheight]{figs/knn/optimize.pdf}
+    \caption{Example of optimization of VO size}
+  \end{figure}
+
+  \begin{itemize}
+    \item Larger \emph{rcircle} $\Rightarrow$ Points visited unnecessarily $\Rightarrow$ Larger VO
+    \item CSlaves execute range queries \alert{sequentially}
+    \item Reduce \emph{rcircle} in each iteration
   \end{itemize}
 \end{frame}
 
