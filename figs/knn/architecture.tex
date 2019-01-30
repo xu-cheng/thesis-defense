@@ -1,0 +1,25 @@
+\begin{tikzpicture}
+  \tikzstyle{node}=[
+  draw=black,
+  thick,
+  rounded corners,
+  inner sep=5pt,
+  minimum width=50pt,
+  ]
+  \node[node] (master) {Master};
+  \node[node, right=50pt of master] (s1) {Slave};
+  \node[above=2pt of s1] (dot1) {$\cdots$};
+  \node[node, above=2pt of dot1] (s2) {Slave};
+  \node[below=2pt of s1] (dot2) {$\cdots$};
+  \node[node, below=2pt of dot2] (s3) {Slave};
+  \node[node, right=50pt of s1] (reducer) {Reducer};
+  \draw[-latex] (master.east) -- (s1.west);
+  \draw[-latex] (master.east) -- (s2.west)
+    node[midway,xshift=-20pt,yshift=12pt] {dispatch jobs};
+  \draw[-latex] (master.east) -- (s3.west);
+  \draw[-latex] (s1.east) -- (reducer.west);
+  \draw[-latex] (s2.east) -- (reducer.west)
+    node[midway,xshift=35pt,yshift=12pt] {consolidate results};
+  \draw[-latex] (s3.east) -- (reducer.west);
+  \node[above=0 of s2] {actual works};
+\end{tikzpicture}
